@@ -146,19 +146,19 @@ void najmniejszaSciezka(lab s)
 	(s->mat[j-1][i]).x = 1;
 	(s->mat[n-2][sr2]).x =1;
 	el **elem;
-	elem = (el**)malloc(sizeof *elem * (n * n));
+	elem = (el**)malloc(sizeof *elem * (10*n * n));
 	int g;
-	for(g = 0; g < n*n; g++)
+	for(g = 0; g < 10*n*n; g++)
 	{
-		elem[g] = (el*)malloc(sizeof *(elem[g]) * n*n);
+		elem[g] = (el*)malloc(sizeof *(elem[g]) * 10*n*n);
 	}
 	
-	int *a = malloc(sizeof *a * n * n); //wektor dla ilości koordynat
-	double *aa = malloc(sizeof *aa * n * n); //wektor dla zapisywanie wagi ścieżki
+	int *a = malloc(sizeof *a * n * n * 10); //wektor dla ilości koordynat
+	double *aa = malloc(sizeof *aa * n * n*10); //wektor dla zapisywanie wagi ścieżki
 	
 	int t;
 	int u;
-	for(t = 0; t < n*n; t++)
+	for(t = 0; t < n*n*10; t++)
 	{
 		j = 2;
 		i = sr1;
@@ -174,7 +174,7 @@ void najmniejszaSciezka(lab s)
 		dealloc(&root);
 	}
 
-	sciezka wagisciezki[n*n];
+	sciezka wagisciezki[n*10*n];
 
 	(wagisciezki[0]).waga = aa[0];
 	(wagisciezki[0]).numer = 0;
@@ -202,7 +202,7 @@ void najmniejszaSciezka(lab s)
 	}
 
 	int gg;
-	for(gg = m; gg < n*n; gg++)
+	for(gg = m; gg < n*n*10; gg++)
 	{
 		(wagisciezki[gg]).numer = 1000000;
 		(wagisciezki[gg]).waga = 1000000;
@@ -253,7 +253,7 @@ void najmniejszaSciezka(lab s)
 	printLab( s );
 
 	int h;
-	for(h = 0; h < n*n; h++)
+	for(h = 0; h < n*n*10; h++)
 	{
 		free(elem[h]);
 	}
