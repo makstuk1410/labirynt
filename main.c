@@ -32,7 +32,6 @@ int main(int argc, char **argv)
 	wagiLab( l );
 	najmniejszaSciezka( l );
 	zamianaLabZero( l );
-	printLab( l );
 	freeLab( l );
 
 	return 0;

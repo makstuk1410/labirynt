@@ -146,39 +146,41 @@ void najmniejszaSciezka(lab s)
 	(s->mat[j-1][i]).x = 1;
 	(s->mat[n-2][sr2]).x =1;
 	el **elem;
-	elem = (el**)malloc(sizeof *elem * (n * 10 * n));
+	elem = (el**)malloc(sizeof *elem * (n * n));
 	int g;
-	for(g = 0; g < n*10*n; g++)
+	for(g = 0; g < n*n; g++)
 	{
-		elem[g] = (el*)malloc(sizeof *(elem[g]) * n*10*n);
+		elem[g] = (el*)malloc(sizeof *(elem[g]) * n*n);
 	}
 	
-	int *a = malloc(sizeof *a * 10 * n * n); //wektor dla ilości koordynat
-	double *aa = malloc(sizeof *aa * 10 * n * n); //wektor dla zapisywanie wagi ścieżki
+	int *a = malloc(sizeof *a * n * n); //wektor dla ilości koordynat
+	double *aa = malloc(sizeof *aa * n * n); //wektor dla zapisywanie wagi ścieżki
 	
 	int t;
 	int u;
-	for(t = 0; t < n*n*10; t++)
+	for(t = 0; t < n*n; t++)
 	{
 		j = 2;
 		i = sr1;
 		Node* root = NULL;
+		insert(&root, sr1, 1, 0);
 		insert(&root, sr1, 2, (s->mat[2][sr1]).waga);
 		while(j != n-3 || i != sr2){
 			ruchSciezki(&j, &i, s, &root, 0, sr1);
 		}
+		insert(&root, sr2, n-2, 0);
 		zapisywanieDoWektora(s, elem, a, aa, t, &root);
 		zamianaLabSc(s);
 		dealloc(&root);
 	}
 
-	sciezka wagisciezki[10*n*n];
+	sciezka wagisciezki[n*n];
 
 	(wagisciezki[0]).waga = aa[0];
 	(wagisciezki[0]).numer = 0;
 	int w;
 	int m = 1;
-	int p = 0;
+	int p;
 	int b;
 	for(w = 1; w < t; w++)
 	{
@@ -188,6 +190,7 @@ void najmniejszaSciezka(lab s)
 			if(aa[w] == (wagisciezki[b]).waga)
 			{
 				p = 1;
+				break;
 			}
 		}
 	
@@ -199,20 +202,33 @@ void najmniejszaSciezka(lab s)
 	}
 
 	int gg;
-	for(gg = m; gg < 10*n*n; gg++)
+	for(gg = m; gg < n*n; gg++)
 	{
 		(wagisciezki[gg]).numer = 1000000;
 		(wagisciezki[gg]).waga = 1000000;
 	}
 	
-	printf("W tym labiryncie jest %d sciezek\n", m);
+	printf("\nTutaj są wyświetlone wszystkie ścieżki:\n");
 
-		
+	double yy = 0;
+	int hh = 0;
 	for(p = 0; p < m; p++)
 	{
-		printf("Sciezka numer %d ma wagę: %f\n", p+1, (wagisciezki[p]).waga);
-
+		if(yy != (wagisciezki[p]).waga){
+			hh++;
+			printf("Scieżka numer %d ma wagę: %f\n", hh, (wagisciezki[p]).waga);
+			int numer = (wagisciezki[p]).numer;
+			for(u = 0; u < a[numer]; u++)
+	        	{
+        	        	(s->mat[(elem[numer][u]).j][(elem[numer][u]).i]).x = 3;
+        		}
+			printLab(s);
+			zamianaLabSc(s);
+		}
+		yy = (wagisciezki[p]).waga;
 	}
+	
+	printf("\nCzyli w labiryncie są %d ścieżek\n", hh);
 
 	int numer = 0;
 	double x = (wagisciezki[0]).waga;
@@ -234,8 +250,10 @@ void najmniejszaSciezka(lab s)
 	
 	printf("\n najmniejsza waga scieżki w labiryncie to %g\n", x);
 
+	printLab( s );
+
 	int h;
-	for(h = 0; h < n*10*n; h++)
+	for(h = 0; h < n*n; h++)
 	{
 		free(elem[h]);
 	}
@@ -415,10 +433,12 @@ void ruchSciezki(int *j, int *i, lab s, Node** root, int bl, int sr)
                 case 1:
 			if(mod == 0){
 				insert(root, (*i)-2, (*j), (s->mat[*j][(*i)-2]).waga);
+				insert(root, (*i)-1, (*j), 0);
 				(s->mat[(*j)][(*i)-1]).x = 3;
                        		(s->mat[*j][(*i)-2]).x = 3;	
 			} else {
 				remove_element(root, *j, *i);
+				remove_element(root, (*j), (*i)-1);
 				(s->mat[(*j)][(*i)]).x = 2;
 			}
 
@@ -427,10 +447,12 @@ void ruchSciezki(int *j, int *i, lab s, Node** root, int bl, int sr)
                 case 2:
 			if(mod == 0){
 				insert(root, (*i), (*j)+2, (s->mat[(*j)+2][(*i)]).waga);
+				insert(root, (*i), (*j)+1, 0);
 				(s->mat[(*j)+1][(*i)]).x = 3;
                         	(s->mat[(*j)+2][(*i)]).x = 3;
 			} else {
                                 remove_element(root, *j, *i);
+				remove_element(root, (*j)+1, *i);
 				(s->mat[(*j)][(*i)]).x = 2;
 			}
 
@@ -440,10 +462,12 @@ void ruchSciezki(int *j, int *i, lab s, Node** root, int bl, int sr)
                 case 3:
 			if(mod == 0){
 				insert(root, (*i)+2, (*j), (s->mat[(*j)][(*i)+2]).waga);
+				insert(root, (*i)+1, (*j), 0);
 				(s->mat[(*j)][(*i)+1]).x = 3;
                         	(s->mat[(*j)][(*i)+2]).x = 3;
 			} else {
                                 remove_element(root, *j, *i);
+				remove_element(root, *j, (*i)+1);
 				(s->mat[(*j)][(*i)]).x = 2;
 			}
 
@@ -453,10 +477,12 @@ void ruchSciezki(int *j, int *i, lab s, Node** root, int bl, int sr)
                 case 4:
 			if(mod == 0){
 				insert(root, (*i), (*j)-2, (s->mat[(*j)-2][(*i)]).waga);
+				insert(root, (*i), (*j)-1, 0);
 				(s->mat[(*j)-1][(*i)]).x = 3;
 	                        (s->mat[(*j)-2][(*i)]).x = 3;
 			} else {
                         	remove_element(root, *j, *i);
+				remove_element(root, (*j)-1, *i);
 				(s->mat[(*j)][(*i)]).x = 2;
 			}
 
