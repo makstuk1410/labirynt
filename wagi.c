@@ -7,7 +7,7 @@
 #include "wagi.h"
 
 
-
+//dodanie elementu do listy liniowej
 void insert(Node **root, int i, int j, double waga)
 {
 	Node* new_node = malloc(sizeof(Node));
@@ -37,7 +37,7 @@ void insert(Node **root, int i, int j, double waga)
 	curr->next = new_node;
 }
 
-
+//usuwanie elementu z listy liniowej
 void remove_element(Node **root, int j, int i)
 {
 	if(*root == NULL)
@@ -71,7 +71,7 @@ void remove_element(Node **root, int j, int i)
 	return;
 }
 
-
+//zwolnienie pamięci dla listy liniowej
 void dealloc(Node** root)
 {
 	Node* curr = *root;
@@ -87,7 +87,7 @@ void dealloc(Node** root)
 
 
 
-
+//losowanie wagi od 0 do 10
 double randomWaga(void)
 {
 	srand(clock());
@@ -97,6 +97,8 @@ double randomWaga(void)
 	return r;
 }
 
+
+//dla każdego wierzchołka nadajemy wagę
 void wagiLab(lab s)
 {
 	int n = s->n;
@@ -113,7 +115,7 @@ void wagiLab(lab s)
 	}
 }
 
-
+//drukowanie labiryntu z wagami wyświetlonymi
 void printWagi(lab s)
 {
 	int i, j;
@@ -135,7 +137,7 @@ void printWagi(lab s)
 
 
 
-
+//szukanie najmniejszej ścieżki, zapisywanie koordynat każdej ścieżki do wektora i wyświetlenie tych ścieżek z ich wagami 
 void najmniejszaSciezka(lab s)
 {
 	int n = s->n;
@@ -264,7 +266,7 @@ void najmniejszaSciezka(lab s)
 
 
 
-void zapisywanieDoWektora(lab s, el** elem, int* a, double* aa, int t, Node **root)
+void zapisywanieDoWektora(lab s, el** elem, int* a, double* aa, int t, Node **root) //zapisywanie do wektora koordynat każdego wierzchołka każdej ścieżki z listy liniowej 
 {	
 	int g = 0;
 	double waga = 0;
@@ -281,7 +283,7 @@ void zapisywanieDoWektora(lab s, el** elem, int* a, double* aa, int t, Node **ro
 
 
 
-int kierunekSciezki(int j, int i, lab s, int mode, int* mod, int* bl)
+int kierunekSciezki(int j, int i, lab s, int mode, int* mod, int* bl) //wybranie losowego kierunku spośród możliwych 
 {
 	int n = s->n;
 	int a, b, c, d;
@@ -419,7 +421,7 @@ int kierunekSciezki(int j, int i, lab s, int mode, int* mod, int* bl)
 
 
 
-void ruchSciezki(int *j, int *i, lab s, Node** root, int bl, int sr)
+void ruchSciezki(int *j, int *i, lab s, Node** root, int bl, int sr) //ruch po labiryncie razem z zapisywaniem koordynat do listy liniowej
 {
 	int mod = 0;
 	int bll = 0;
