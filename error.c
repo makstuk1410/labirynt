@@ -5,13 +5,13 @@
 #include <math.h>
 
 
-int blad(int argc, char **argv)
+int blad(int argc, char **argv) //funkcja która sprawdza podany argument wywołania 
 {
-	if(argc > 2)
+	if(argc > 2) //sprawdza cz czasem nie jest więcej niż jeden argument 
 	{
 		fprintf(stderr, "%s: może być tylko jedyn argument podany\n", argv[0]);
 		return 1;
-	} else if (argc < 2){
+	} else if (argc < 2){ //sprawdza czy w ogóle jest podany argument 
 		fprintf(stderr, "%s: nie podano formatu labiryntu", argv[0]);
 		return 1;
 	}
@@ -21,7 +21,7 @@ int blad(int argc, char **argv)
 	
 	int y = x*1;
 	double u = fmod(x, (double)y);
-	
+	//dalej jest sprawdzenie czy argument nie jest słowem czy liczbą mniejszą od dwóch i czy nie jest ta liczba zmiennoprzecinkowa 
 	if(strlen(endp) == 0 && u == 0.0)
 	{
 		if(x < 2)
