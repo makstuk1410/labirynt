@@ -5,7 +5,7 @@
 #include <stdlib.h>
 #include <time.h>
 
-int randoms(lab s)
+int randoms(lab s) //losowy wybór maksymalnej ilości ścian w labiryncie
 {
 	int n = (s->n - 3) / 2;
 	n = n / 2;
@@ -16,7 +16,7 @@ int randoms(lab s)
 	return r;
 }
 
-void randoml(lab s, int *j, int *i)
+void randoml(lab s, int *j, int *i) //losowy wybór elementu z jedynką
 {
 	int n = ((s->n - 3)/2)-1;
 		
@@ -41,7 +41,7 @@ void randoml(lab s, int *j, int *i)
 }
 
 
-int sprs(lab s, int j, int i, int* stan, int bl)
+int sprs(lab s, int j, int i, int* stan, int bl) //szukanie możliwego kierunku dla zamiany ściany z jedynki na inną liczbę
 {
 	int n = s->n;
 	int a[4];
@@ -97,7 +97,7 @@ int sprs(lab s, int j, int i, int* stan, int bl)
 		suma += a[y];
 	}
 	
-	int k;
+	int k; //wybieramy losowo kierunek z móżliwych dalej 
 	if(suma == 1)
 	{
 		k = randomKierunek(a[0], a[1], a[2], a[3]);
@@ -110,7 +110,7 @@ int sprs(lab s, int j, int i, int* stan, int bl)
 		*stan = 0;
 	}
 	
-	return k;
+	return k; //zwracamy wybrany spośród możliwych losowo kierunek
 }
 
 
@@ -139,9 +139,9 @@ void zamianaSciany(lab s, int j, int i, int l)
 }
 
 
-int zamianas(lab s)
+int zamianas(lab s) //tutaj zamiana wszystkich wybranych ścian na pewne liczby zamiast jedynki
 {
-	int sc = randoms(s);
+	int sc = randoms(s); //maksymalna ilość ścian w środku 
 	
 	
 	int sr1, sr2;
@@ -162,14 +162,14 @@ int zamianas(lab s)
 	}
 	
 	int l = sc+2;
-	return l; //zwraca ilosc cyfr
+	return l; //zwraca ilosc ścian
 }
 
-void ruchzam(lab s, int *j, int *i, int k, int l)
+void ruchzam(lab s, int *j, int *i, int k, int l) //ruch który zamienia jakąś ścianę z jedynki na inną liczbę wybraną
 {
 	int stan;
     int bl = k;
-	switch(k)
+	switch(k) //jest sprawdzany kierunek i poruszamy się w nim
 	{
 		case 1:
 			while((s->mat[*j][(*i)-1]).x == 1)
@@ -178,7 +178,7 @@ void ruchzam(lab s, int *j, int *i, int k, int l)
                 		if(stan == 2)
                 		{
                                 k = sprs(s, *j, (*i)-1, &stan, bl);
-                    			zamianaSciany(s, *j, (*i)-1, l);
+                    			zamianaSciany(s, *j, (*i)-1, l); //jeżeli istnieje nie jeden kierunek możliwy w pewnym przypadku to spoczątku zmieniamy liczby w w tym powrocie a potem tylko idziemy w początkowym kierunku
                 		}
 				s->mat[(*j)][(*i)-1].x = l;
 				(*i)--;                
@@ -214,7 +214,7 @@ void ruchzam(lab s, int *j, int *i, int k, int l)
 			}
                         break;
 		case 4:
-			while((s->mat[(*j)-1][(*i)]).x == 1)
+			while((s->mat[(*j)-1][(*i)]).x == 1) 
                         {
 				k = sprs(s, (*j)-1, (*i), &stan, 0); 
                                 if(stan == 2)
@@ -232,9 +232,9 @@ void ruchzam(lab s, int *j, int *i, int k, int l)
 
 
 
-void tworzenieWektora(lab s, el** elem, int* a, int* aa, int sz)
+void tworzenieWektora(lab s, el** elem, int* a, int* aa, int sz) //tutaj jest tworzenie pewnego wektora dla którego jest już alokowana pamięć 
 {	
-	int j, i;
+	int j, i; 
 	int r;
 	int h = 2;
 	for(r = 0; r < sz; r++){
@@ -260,10 +260,10 @@ void tworzenieWektora(lab s, el** elem, int* a, int* aa, int sz)
 }
 
 
-void rysowanieScian(lab s){
+void rysowanieScian(lab s){ //to jest ogólna funkcja która łączy ściany
 	zamianas(s);
 
-	int sz = zamianas(s);
+	int sz = zamianas(s); //losowo ustawiamy malsymalną ilość ścian w labiryncie 
 	el **elem;
 	elem = (el**)malloc(sizeof *elem * (sz+1));
 	int g;
@@ -274,23 +274,23 @@ void rysowanieScian(lab s){
 	srand(clock());
 	int *a = malloc(sizeof *a * (sz+1));
 	int *aa = malloc(sizeof *aa * (sz+1));
-	tworzenieWektora(s, elem, a, aa, sz);
+	tworzenieWektora(s, elem, a, aa, sz); //alokacja pamięci dla pewnego wektora i jego zapełnienie 
 	int h, r;
 	for(h = 0; h < s->n*s->n*10; h++){
 		for(r = 0; r < sz; r++){
 			int k = 1;
-			while(k != 0)
+			while(k != 0) //dopóki nie będzie łączona choczaż jedna ściana to pętla się powtarza 
 			{
 				int i, j;
-				int rr = a[r] * ((double)rand()/RAND_MAX);
+				int rr = a[r] * ((double)rand()/RAND_MAX); //losowo wybieramy jedną pojedynczą ścianę  która jest zaznaczona pewną cyfrą z wektora stworzonego wcześniej 
 				j = (elem[r][rr]).j;
 				i = (elem[r][rr]).i;
 				
-				k = sprss(s, j, i);
-				ruchsz(s, j, i, k, aa[r], r);
-				zamianaSciany(s, j, i, aa[r]);
+				k = sprss(s, j, i); //sprawdzenie czy możem złączyć ścianę jeżeli jesteśmy w pewnej ścianie pojedynczej 
+				ruchsz(s, j, i, k, aa[r], r); //pojedyncze łączenie ściany
+				zamianaSciany(s, j, i, aa[r]); //zrobienia tego żeby złączona ściana miała tylko jedną liczbę
 						
-				tworzenieWektora(s, elem, a, aa, sz);	
+				tworzenieWektora(s, elem, a, aa, sz);	 //dopełnienie wektora który ma koordynaty każdej pojedynczej ściany z jednej całkowitej ściany
 			}
 		}
 	}
@@ -307,7 +307,7 @@ void rysowanieScian(lab s){
 }
 
 
-int sprss(lab s, int j, int i)
+int sprss(lab s, int j, int i) //sprawdzenie czy możemy złączyć ścianę i jeżeli możemy to losowo wybieramy kierunek spośród możliwych 
 {
 	int n = s->n;
 	int a[4];
@@ -352,13 +352,13 @@ int sprss(lab s, int j, int i)
 	}
 	
 	
-	int k = randomKierunek(a[0], a[1], a[2], a[3]);
+	int k = randomKierunek(a[0], a[1], a[2], a[3]); //losowy wybór kierunku spośród możliwych
 		
 	return k;
 }
 
 
-void ruchsz(lab s, int j, int i, int k, int h, int r)
+void ruchsz(lab s, int j, int i, int k, int h, int r) //łączenie pojedyncze w wybranym kierunku
 {
 	switch(k)
 	{
