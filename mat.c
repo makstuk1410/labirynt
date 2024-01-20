@@ -2,14 +2,14 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-lab createLab(int n)
+lab createLab(int n)  //funkcja dla stworzenia macierzy nxn dla labiryntu
 {
-	lab new = (lab) malloc(sizeof new);
+	lab new = (lab) malloc(sizeof new); //alokacja pamięci dla new
 	
 	if(new != NULL)
 	{	
 		new->n = (n*2) + 3;
-		new->mat = (elem**) malloc(sizeof(elem*) * new->n);
+		new->mat = (elem**) malloc(sizeof(elem*) * new->n); //alokacja pamięci dla new->mat
 		
 		if(new->mat == NULL){
 #ifdef DEBUG
@@ -21,7 +21,7 @@ lab createLab(int n)
 		int i;
 		for(i = 0; i < new->n; i++)
 		{
-			new->mat[i] = (elem*)malloc(sizeof(elem) * new->n);
+			new->mat[i] = (elem*)malloc(sizeof(elem) * new->n); //alokacja pamięci dla każdego elementu tablicy new->mat
 			if(new->mat[i] == NULL)
 			{
 				int j;
@@ -34,6 +34,7 @@ lab createLab(int n)
 #ifdef DEBUG
 				fprintf(stderr, "Błąd: nie alokowana pamięć dla new->mat[%d]", i);
 #endif
+    return NULL;
 			}
 			
 		}
@@ -48,7 +49,7 @@ lab createLab(int n)
 }
 
 
-void srodek(lab s, int *sr1, int *sr2)
+void srodek(lab s, int *sr1, int *sr2) //funkcja dla szukania koordynat wejścia i wyjścia 
 {
     double sr;
 	int srr;
@@ -68,8 +69,11 @@ void srodek(lab s, int *sr1, int *sr2)
 }
 
 
-void fill_lab(lab s)
+void fill_lab(lab s) //funkcja dla początkowego zapełnienia stworzonego labityntu
 {	
+	//szukanie wejścia i wyjścia w labiryncie 
+	//  |
+	//  v
 	double sr;
 	int sr1, sr2, srr;
 	int n = s->n;
@@ -85,7 +89,7 @@ void fill_lab(lab s)
 		sr1 = srr-1;
 		sr2 = sr1+2;
 	}
-
+ //zapełnienie macierzy zerami i jedynkami dalej do końca funkcji
 	int i, j;
 	for(i = 0; i < n; i++)
 	{
@@ -145,7 +149,8 @@ void fill_lab(lab s)
 	(s->mat[n-3][sr2]).x = 0;
 }
 
-void zamianaLab(lab s)
+void zamianaLab(lab s) //funkcja robi zamianę wszystkich trójek w labiryncie na jedynki
+
 {
 	int i, j;
 	int n = s->n;
@@ -162,7 +167,7 @@ void zamianaLab(lab s)
 }
 
 
-void zamianaLabSc(lab s)
+void zamianaLabSc(lab s) //funkcja robi zamianę wszystkich trójek i dwójek w labiryncie na zera
 {
         int i, j;
         int n = s->n;
@@ -180,7 +185,7 @@ void zamianaLabSc(lab s)
 
 
 
-void zamianaLabZero(lab s)
+void zamianaLabZero(lab s) //funkcja która szuka wejście o wyjście z laniryntu i zamienia jedynkę na ścianę
 {
 	double sr; 
         int sr1, sr2, srr;
@@ -203,7 +208,7 @@ void zamianaLabZero(lab s)
 
 }
 
-void zamiana(lab x)
+void zamiana(lab x) //zamiana wszystkich nie równych zeru liczb na jedynki
 {
 	int n = x->n;
 	int i, j;
@@ -221,7 +226,7 @@ void zamiana(lab x)
 
 
 
-void printLab(lab x)
+void printLab(lab x) //drukowanie laniryntu
 {
 	int i, j;
 	for(i = 0; i < x->n; i++)
@@ -233,7 +238,7 @@ void printLab(lab x)
 			} else if((x->mat[i][j]).x == 3){
             	    		printf("\e[41m  \e[0m");  // Przejście
             		} else {
-				printf("  ");
+				printf("  "); //przejście
 			}
 		}
 		printf("\n");
@@ -242,7 +247,7 @@ void printLab(lab x)
 
 
 
-void freeLab(lab x)
+void freeLab(lab x) //zwolnienie pamięci dla alokowanej dla labiryntu
 {
 	int i;
 	for(i = 0; i < x->n; i++)
